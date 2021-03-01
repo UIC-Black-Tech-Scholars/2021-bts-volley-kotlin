@@ -38,11 +38,46 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun makeWebRequests() {
-
         val textUrl = "https://pastebin.com/raw/HNGezyyW"
+        val request = StringRequest(
+                Request.Method.GET,
+                textUrl,
+                Response.Listener { response ->
+                    try {
+                        Log.i("MainActivity", response)
+                        firstText.setText(response)
 
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                    }
+                },
+                Response.ErrorListener { error ->
+                    error.printStackTrace()
+                }
+        )
+
+        requestQueue?.add(request)
 
         val ImageUrl = "https://pastebin.com/raw/AjEDaQ4V"
 
+        val request2 = StringRequest(
+                Request.Method.GET,
+                ImageUrl,
+                Response.Listener { response ->
+                    try {
+                        Log.i("MainActivity", response)
+                        val decodedString: ByteArray = Base64.decode(response.substring(21), Base64.DEFAULT)
+                        val decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
+                        imageView.setImageBitmap(decodedByte)
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                    }
+                },
+                Response.ErrorListener { error ->
+                    error.printStackTrace()
+                }
+        )
+
+        requestQueue?.add(request2)
     }
 }
